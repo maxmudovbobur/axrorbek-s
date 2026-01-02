@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uinston Koʻprigi - Qarshilikni Aniqlash</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Uinston Koʻprigi</h1>
+            <p class="subtitle">Oʻtkazgichlarning qarshiligini aniqlash</p>
+        </header>
+
+        <main>
+            <div class="content-wrapper">
+                <section class="intro">
+                    <h2><i class="fas fa-info-circle"></i> Uinston Koʻprigi haqida</h2>
+                    <p>Uinston koʻprigi - bu elektr qarshiligini aniq oʻlchash uchun ishlatiladigan moslama. U asosan toʻrtta qarshilikdan iborat boʻlib, ular toʻrtburchak shaklida joylashtirilgan. Koʻprik muvozanat holatida boʻlganda, nomaʼlum qarshilikni hisoblash mumkin.</p>
+                    
+                    <div class="formula-box">
+                        <h3><i class="fas fa-calculator"></i> Formulasi:</h3>
+                        <p>Uinston koʻprigi muvozanat sharti: <span class="formula">R<sub>x</sub> = (R<sub>2</sub> × R<sub>3</sub>) / R<sub>1</sub></span></p>
+                        <p>Bu yerda:
+                            <ul>
+                                <li><strong>R<sub>x</sub></strong> - noma'lum qarshilik</li>
+                                <li><strong>R<sub>1</sub>, R<sub>2</sub>, R<sub>3</sub></strong> - ma'lum qarshiliklar</li>
+                            </ul>
+                        </p>
+                    </div>
+                </section>
+
+                <section class="calculator">
+                    <h2><i class="fas fa-calculator"></i> Qarshilikni Hisoblash</h2>
+                    
+                    <div class="bridge-diagram">
+                        <div class="resistor r1">
+                            <span>R₁</span>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="1000" value="100" class="resistor-slider" id="r1-slider">
+                                <span id="r1-value">100 Ω</span>
+                            </div>
+                        </div>
+                        
+                        <div class="resistor r2">
+                            <span>R₂</span>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="1000" value="200" class="resistor-slider" id="r2-slider">
+                                <span id="r2-value">200 Ω</span>
+                            </div>
+                        </div>
+                        
+                        <div class="resistor r3">
+                            <span>R₃</span>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="1000" value="300" class="resistor-slider" id="r3-slider">
+                                <span id="r3-value">300 Ω</span>
+                            </div>
+                        </div>
+                        
+                        <div class="resistor rx">
+                            <span>Rₓ = ?</span>
+                            <div class="result" id="rx-result">600 Ω</div>
+                        </div>
+                        
+                        <div class="bridge-center">
+                            <div class="galvanometer">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <div class="galvanometer-needle" id="needle"></div>
+                                <span class="galvanometer-label">Galvanometr</span>
+                            </div>
+                        </div>
+                        
+                        <div class="battery">
+                            <i class="fas fa-battery-full"></i>
+                            <span>Batareya</span>
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="calculate-btn" class="btn calculate-btn">
+                            <i class="fas fa-calculator"></i> Hisoblash
+                        </button>
+                        <button id="reset-btn" class="btn reset-btn">
+                            <i class="fas fa-redo"></i> Qayta o'rnatish
+                        </button>
+                        <button id="auto-balance-btn" class="btn auto-btn">
+                            <i class="fas fa-robot"></i> Avto-muvozanat
+                        </button>
+                    </div>
+                    
+                    <div class="calculation-details">
+                        <h3><i class="fas fa-list-alt"></i> Hisoblash tafsilotlari:</h3>
+                        <p id="calculation-text">Rₓ = (R₂ × R₃) / R₁ = (200Ω × 300Ω) / 100Ω = 600Ω</p>
+                    </div>
+                </section>
+
+                <section class="info">
+                    <h2><i class="fas fa-lightbulb"></i> Qoʻllanma</h2>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <p>R₁, R₂ va R₃ qarshiliklarini slayderlar yordamida sozlang</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <p>"Hisoblash" tugmasini bosing yoki "Avto-muvozanat" ni tanlang</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <p>Natijani Rₓ qarshiligi qutisida koʻring</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <p>Galvanometr koʻrsatkichi muvozanat holatini koʻrsatadi</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>Uinston Koʻprigi Simulyatori &copy; 2023 | Fizika va Elektronika</p>
+            <p class="footer-note">Uinston koʻprigi - Charlz Uinston (1843-1914) tomonidan ixtiro qilingan</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
