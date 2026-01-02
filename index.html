@@ -3,117 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uinston Koʻprigi - Qarshilikni Aniqlash</title>
+    <title>Elektr Energiyasining Issiqlik Ekvalenti</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-bolt"></i> Uinston Koʻprigi</h1>
-            <p class="subtitle">Oʻtkazgichlarning qarshiligini aniqlash</p>
+            <h1><i class="fas fa-fire"></i> Elektr Energiyasining Issiqlik Ekvalenti</h1>
+            <p class="subtitle">Joule-Lenz qonuni asosida issiqlik miqdorini hisoblash</p>
         </header>
 
         <main>
             <div class="content-wrapper">
-                <section class="intro">
-                    <h2><i class="fas fa-info-circle"></i> Uinston Koʻprigi haqida</h2>
-                    <p>Uinston koʻprigi - bu elektr qarshiligini aniq oʻlchash uchun ishlatiladigan moslama. U asosan toʻrtta qarshilikdan iborat boʻlib, ular toʻrtburchak shaklida joylashtirilgan. Koʻprik muvozanat holatida boʻlganda, nomaʼlum qarshilikni hisoblash mumkin.</p>
-                    
-                    <div class="formula-box">
-                        <h3><i class="fas fa-calculator"></i> Formulasi:</h3>
-                        <p>Uinston koʻprigi muvozanat sharti: <span class="formula">R<sub>x</sub> = (R<sub>2</sub> × R<sub>3</sub>) / R<sub>1</sub></span></p>
-                        <p>Bu yerda:
+                <section class="theory-section">
+                    <h2><i class="fas fa-book"></i> Nazariya</h2>
+                    <div class="theory-content">
+                        <p>Elektr energiyasining issiqlik ekvalenti - bu elektr energiyasi issiqlik energiyasiga aylanganda, 1 joule elektr energiyasi qancha issiqlik energiyasini berishini ko'rsatadi.</p>
+                        
+                        <div class="formula-card">
+                            <h3><i class="fas fa-calculator"></i> Joule-Lenz qonuni</h3>
+                            <div class="formula">Q = I² × R × t</div>
+                            <p>Bu yerda:</p>
                             <ul>
-                                <li><strong>R<sub>x</sub></strong> - noma'lum qarshilik</li>
-                                <li><strong>R<sub>1</sub>, R<sub>2</sub>, R<sub>3</sub></strong> - ma'lum qarshiliklar</li>
+                                <li><strong>Q</strong> - ajralgan issiqlik miqdori (Joul)</li>
+                                <li><strong>I</strong> - tok kuchi (Amper)</li>
+                                <li><strong>R</strong> - qarshilik (Ohm)</li>
+                                <li><strong>t</strong> - vaqt (soniya)</li>
                             </ul>
-                        </p>
+                        </div>
+                        
+                        <div class="experiment-info">
+                            <h3><i class="fas fa-flask"></i> Tajriba tavsifi</h3>
+                            <p>Kalorimetrdagi suvni qizdirish uchun elektr tokidan foydalaniladi. Ajralgan issiqlik miqdori suvning massasi va harorat o'zgarishi orqali hisoblanadi:</p>
+                            <div class="formula">Q = m × c × ΔT</div>
+                            <p>Bu yerda:</p>
+                            <ul>
+                                <li><strong>m</strong> - suv massasi (kg)</li>
+                                <li><strong>c</strong> - suvning solishtirma issiqlik sig'imi (4186 J/kg·°C)</li>
+                                <li><strong>ΔT</strong> - harorat farqi (°C)</li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
 
-                <section class="calculator">
-                    <h2><i class="fas fa-calculator"></i> Qarshilikni Hisoblash</h2>
+                <section class="calculator-section">
+                    <h2><i class="fas fa-calculator"></i> Hisoblash Kalkulyatori</h2>
                     
-                    <div class="bridge-diagram">
-                        <div class="resistor r1">
-                            <span>R₁</span>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="1000" value="100" class="resistor-slider" id="r1-slider">
-                                <span id="r1-value">100 Ω</span>
+                    <div class="calculator-container">
+                        <div class="input-group">
+                            <div class="input-card">
+                                <label for="current">
+                                    <i class="fas fa-bolt"></i> Tok kuchi (I)
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="range" id="current-slider" min="0.1" max="10" step="0.1" value="2">
+                                    <input type="number" id="current" min="0.1" max="10" step="0.1" value="2">
+                                    <span class="unit">A</span>
+                                </div>
+                                <div class="value-display" id="current-value">2.0 A</div>
+                            </div>
+                            
+                            <div class="input-card">
+                                <label for="resistance">
+                                    <i class="fas fa-resistance"></i> Qarshilik (R)
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="range" id="resistance-slider" min="1" max="100" step="1" value="20">
+                                    <input type="number" id="resistance" min="1" max="100" step="1" value="20">
+                                    <span class="unit">Ω</span>
+                                </div>
+                                <div class="value-display" id="resistance-value">20 Ω</div>
+                            </div>
+                            
+                            <div class="input-card">
+                                <label for="time">
+                                    <i class="fas fa-clock"></i> Vaqt (t)
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="range" id="time-slider" min="10" max="600" step="10" value="60">
+                                    <input type="number" id="time" min="10" max="600" step="1" value="60">
+                                    <span class="unit">s</span>
+                                </div>
+                                <div class="value-display" id="time-value">60 s</div>
+                            </div>
+                            
+                            <div class="input-card">
+                                <label for="mass">
+                                    <i class="fas fa-weight-hanging"></i> Suv massasi (m)
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="range" id="mass-slider" min="0.1" max="2" step="0.1" value="0.5">
+                                    <input type="number" id="mass" min="0.1" max="2" step="0.1" value="0.5">
+                                    <span class="unit">kg</span>
+                                </div>
+                                <div class="value-display" id="mass-value">0.5 kg</div>
                             </div>
                         </div>
                         
-                        <div class="resistor r2">
-                            <span>R₂</span>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="1000" value="200" class="resistor-slider" id="r2-slider">
-                                <span id="r2-value">200 Ω</span>
+                        <div class="results-container">
+                            <div class="result-card">
+                                <h3><i class="fas fa-thermometer-half"></i> Hisoblangan Issiqlik</h3>
+                                <div class="result-value" id="heat-calculated">4800 J</div>
+                                <p class="result-formula" id="formula-calc">Q = I² × R × t = (2.0)² × 20 × 60 = 4800 J</p>
+                            </div>
+                            
+                            <div class="result-card">
+                                <h3><i class="fas fa-temperature-high"></i> Harorat o'zgarishi</h3>
+                                <div class="result-value" id="temp-change">2.29 °C</div>
+                                <p class="result-formula" id="formula-temp">ΔT = Q / (m × c) = 4800 / (0.5 × 4186) = 2.29°C</p>
+                            </div>
+                            
+                            <div class="result-card highlight">
+                                <h3><i class="fas fa-balance-scale"></i> Issiqlik Ekvalenti</h3>
+                                <div class="result-value" id="heat-equivalent">1.00 J/J</div>
+                                <p class="result-formula">1 joule elektr energiyasi = 1 joule issiqlik energiyasi</p>
+                                <p class="result-note">Joule qonuniga ko'ra, elektr energiyasining issiqlik ekvalenti 1 ga teng</p>
                             </div>
                         </div>
                         
-                        <div class="resistor r3">
-                            <span>R₃</span>
-                            <div class="slider-container">
-                                <input type="range" min="1" max="1000" value="300" class="resistor-slider" id="r3-slider">
-                                <span id="r3-value">300 Ω</span>
+                        <div class="experiment-visualization">
+                            <h3><i class="fas fa-vial"></i> Tajriba Simulyatsiyasi</h3>
+                            <div class="experiment-setup">
+                                <div class="calorimeter">
+                                    <div class="calorimeter-label">Kalorimetr</div>
+                                    <div class="water-container">
+                                        <div class="water-level" id="water-level"></div>
+                                        <div class="temperature-indicator">
+                                            <span class="temp-label">Harorat: </span>
+                                            <span class="temp-value" id="current-temp">25.0°C</span>
+                                        </div>
+                                    </div>
+                                    <div class="heater">
+                                        <div class="heater-coil"></div>
+                                        <div class="heater-label">Isitgich</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="circuit-diagram">
+                                    <div class="battery">
+                                        <i class="fas fa-battery-full"></i>
+                                        <div class="battery-label">Batareya</div>
+                                    </div>
+                                    <div class="ammeter">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <div class="ammeter-value" id="ammeter-value">2.0 A</div>
+                                    </div>
+                                    <div class="resistor-symbol">
+                                        <div class="resistor-icon"></div>
+                                        <div class="resistor-value" id="circuit-resistance">20 Ω</div>
+                                    </div>
+                                    <div class="wires"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="animation-controls">
+                                <button id="start-experiment" class="btn experiment-btn">
+                                    <i class="fas fa-play"></i> Tajribani Boshlash
+                                </button>
+                                <button id="reset-experiment" class="btn reset-btn">
+                                    <i class="fas fa-redo"></i> Qayta Boshlash
+                                </button>
+                                <button id="auto-calc" class="btn auto-btn">
+                                    <i class="fas fa-robot"></i> Avto-hisoblash
+                                </button>
                             </div>
                         </div>
-                        
-                        <div class="resistor rx">
-                            <span>Rₓ = ?</span>
-                            <div class="result" id="rx-result">600 Ω</div>
-                        </div>
-                        
-                        <div class="bridge-center">
-                            <div class="galvanometer">
-                                <i class="fas fa-tachometer-alt"></i>
-                                <div class="galvanometer-needle" id="needle"></div>
-                                <span class="galvanometer-label">Galvanometr</span>
-                            </div>
-                        </div>
-                        
-                        <div class="battery">
-                            <i class="fas fa-battery-full"></i>
-                            <span>Batareya</span>
-                        </div>
-                    </div>
-                    
-                    <div class="controls">
-                        <button id="calculate-btn" class="btn calculate-btn">
-                            <i class="fas fa-calculator"></i> Hisoblash
-                        </button>
-                        <button id="reset-btn" class="btn reset-btn">
-                            <i class="fas fa-redo"></i> Qayta o'rnatish
-                        </button>
-                        <button id="auto-balance-btn" class="btn auto-btn">
-                            <i class="fas fa-robot"></i> Avto-muvozanat
-                        </button>
-                    </div>
-                    
-                    <div class="calculation-details">
-                        <h3><i class="fas fa-list-alt"></i> Hisoblash tafsilotlari:</h3>
-                        <p id="calculation-text">Rₓ = (R₂ × R₃) / R₁ = (200Ω × 300Ω) / 100Ω = 600Ω</p>
                     </div>
                 </section>
 
-                <section class="info">
-                    <h2><i class="fas fa-lightbulb"></i> Qoʻllanma</h2>
-                    <div class="steps">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <p>R₁, R₂ va R₃ qarshiliklarini slayderlar yordamida sozlang</p>
+                <section class="applications-section">
+                    <h2><i class="fas fa-industry"></i> Amaliy Qo'llanilishi</h2>
+                    <div class="applications-grid">
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-thermometer-full"></i>
+                            </div>
+                            <h3>Elektr Isitgichlar</h3>
+                            <p>Elektr pechlari, choynaklar, isitish moslamalari Joule-Lenz qonuni asosida ishlaydi.</p>
                         </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <p>"Hisoblash" tugmasini bosing yoki "Avto-muvozanat" ni tanlang</p>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3>Elektr Chiroqlar</h3>
+                            <p>An'anaviy chiroq lampochkalari tok o'tganda filamentning qizib ketish printsipida ishlaydi.</p>
                         </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <p>Natijani Rₓ qarshiligi qutisida koʻring</p>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-car-battery"></i>
+                            </div>
+                            <h3>Elektr Transport</h3>
+                            <p>Elektr transport vositalarida akkumulyatorlarni isitish va sovutish tizimlari.</p>
                         </div>
-                        <div class="step">
-                            <div class="step-number">4</div>
-                            <p>Galvanometr koʻrsatkichi muvozanat holatini koʻrsatadi</p>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3>Maishiy Texnika</h3>
+                            <p>Parchalovchi, temir, pech, mikroto'lqinli pech kabilarda issiqlik hosil qilish.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="history-section">
+                    <h2><i class="fas fa-history"></i> Tarixi</h2>
+                    <div class="history-content">
+                        <div class="scientist-card">
+                            <div class="scientist-portrait">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="scientist-info">
+                                <h3>Jeyms Prescott Joule (1818-1889)</h3>
+                                <p>Britaniyalik fizik, issiqlik va mexanik energiya o'rtasidagi bog'liqlikni o'rgangan. Joule-Lenz qonunini kashf etgan. Issiqlik ekvivalentini aniqlash bo'yicha fundamental tajribalar o'tkazgan.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="scientist-card">
+                            <div class="scientist-portrait">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="scientist-info">
+                                <h3>Emil Lenz (1804-1865)</h3>
+                                <p>Germaniyalik fizik, elektromagnit induksiya qonunini kashf etgan (Lenz qonuni). Joule bilan birgalikda elektr tokining issiqlik ta'siri qonunini ishlab chiqqan.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="discovery-timeline">
+                            <h3><i class="fas fa-hourglass-half"></i> Kashfiyot Xronologiyasi</h3>
+                            <ul>
+                                <li><strong>1840</strong> - Joule birinchi marta elektr tokining issiqlik hosil qilishini aniqladi</li>
+                                <li><strong>1842</strong> - Lenz mustaqil ravishda xuddi shu qonunni kashf etdi</li>
+                                <li><strong>1843</strong> - Joule issiqlik ekvivalentini aniq o'lchadi</li>
+                                <li><strong>1850-yillar</strong> - Kelvin Joule-Lenz qonunini energiyaning saqlanish qonuni bilan bog'ladi</li>
+                            </ul>
                         </div>
                     </div>
                 </section>
@@ -121,8 +248,30 @@
         </main>
 
         <footer>
-            <p>Uinston Koʻprigi Simulyatori &copy; 2023 | Fizika va Elektronika</p>
-            <p class="footer-note">Uinston koʻprigi - Charlz Uinston (1843-1914) tomonidan ixtiro qilingan</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-graduation-cap"></i> O'quv Loyihasi</h3>
+                    <p>Elektr energiyasining issiqlik ekvalentini aniqlash</p>
+                    <p>Fizika - 11-sinf</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3><i class="fas fa-calculator"></i> Formulalar</h3>
+                    <p>Q = I² × R × t</p>
+                    <p>Q = m × c × ΔT</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Ma'lumot</h3>
+                    <p>Joule-Lenz qonuni: I²R = issiqlik quvvati</p>
+                    <p>1 joule = 0.239 kaloriya</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>Elektr Energiyasining Issiqlik Ekvalenti Simulyatori &copy; 2023 | Fizika va Energiya</p>
+                <p class="footer-note">Joule-Lenz qonuni - energiyaning saqlanish qonunining maxsus holati</p>
+            </div>
         </footer>
     </div>
 

@@ -1,151 +1,251 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Elementlarni tanlab olish
-    const r1Slider = document.getElementById('r1-slider');
-    const r2Slider = document.getElementById('r2-slider');
-    const r3Slider = document.getElementById('r3-slider');
+    const currentSlider = document.getElementById('current-slider');
+    const currentInput = document.getElementById('current');
+    const currentValue = document.getElementById('current-value');
     
-    const r1Value = document.getElementById('r1-value');
-    const r2Value = document.getElementById('r2-value');
-    const r3Value = document.getElementById('r3-value');
+    const resistanceSlider = document.getElementById('resistance-slider');
+    const resistanceInput = document.getElementById('resistance');
+    const resistanceValue = document.getElementById('resistance-value');
     
-    const rxResult = document.getElementById('rx-result');
-    const calculationText = document.getElementById('calculation-text');
-    const needle = document.getElementById('needle');
+    const timeSlider = document.getElementById('time-slider');
+    const timeInput = document.getElementById('time');
+    const timeValue = document.getElementById('time-value');
     
-    const calculateBtn = document.getElementById('calculate-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const autoBalanceBtn = document.getElementById('auto-balance-btn');
+    const massSlider = document.getElementById('mass-slider');
+    const massInput = document.getElementById('mass');
+    const massValue = document.getElementById('mass-value');
     
-    // Dastlabki qiymatlarni o'rnatish
-    let r1 = parseInt(r1Slider.value);
-    let r2 = parseInt(r2Slider.value);
-    let r3 = parseInt(r3Slider.value);
+    // Natija elementlari
+    const heatCalculated = document.getElementById('heat-calculated');
+    const tempChange = document.getElementById('temp-change');
+    const heatEquivalent = document.getElementById('heat-equivalent');
+    const formulaCalc = document.getElementById('formula-calc');
+    const formulaTemp = document.getElementById('formula-temp');
     
-    // Slayder qiymatlarini yangilash
-    function updateResistorValues() {
-        r1 = parseInt(r1Slider.value);
-        r2 = parseInt(r2Slider.value);
-        r3 = parseInt(r3Slider.value);
+    // Tajriba elementlari
+    const waterLevel = document.getElementById('water-level');
+    const currentTemp = document.getElementById('current-temp');
+    const ammeterValue = document.getElementById('ammeter-value');
+    const circuitResistance = document.getElementById('circuit-resistance');
+    
+    // Tugmalar
+    const startExperimentBtn = document.getElementById('start-experiment');
+    const resetExperimentBtn = document.getElementById('reset-experiment');
+    const autoCalcBtn = document.getElementById('auto-calc');
+    
+    // O'zgaruvchilar
+    let initialTemp = 25.0;
+    let currentTemperature = initialTemp;
+    let experimentRunning = false;
+    let experimentInterval;
+    const specificHeatWater = 4186; // J/kg·°C
+    
+    // Slayder va inputlarni sinkronlashtirish
+    function syncInputs() {
+        // Tok kuchi
+        currentSlider.value = currentInput.value;
+        currentValue.textContent = `${parseFloat(currentInput.value).toFixed(1)} A`;
+        ammeterValue.textContent = `${parseFloat(currentInput.value).toFixed(1)} A`;
         
-        r1Value.textContent = `${r1} Ω`;
-        r2Value.textContent = `${r2} Ω`;
-        r3Value.textContent = `${r3} Ω`;
+        // Qarshilik
+        resistanceSlider.value = resistanceInput.value;
+        resistanceValue.textContent = `${resistanceInput.value} Ω`;
+        circuitResistance.textContent = `${resistanceInput.value} Ω`;
+        
+        // Vaqt
+        timeSlider.value = timeInput.value;
+        timeValue.textContent = `${timeInput.value} s`;
+        
+        // Massa
+        massSlider.value = massInput.value;
+        massValue.textContent = `${parseFloat(massInput.value).toFixed(2)} kg`;
+        
+        // Suv darajasini yangilash
+        const mass = parseFloat(massInput.value);
+        const waterHeight = 30 + (mass * 35); // 0.1kg dan 2kg gacha
+        waterLevel.style.height = `${waterHeight}%`;
+        
+        // Hisoblashni yangilash
+        calculateHeat();
     }
     
-    // Qarshilikni hisoblash
-    function calculateResistance() {
-        // Uinston ko'prigi formulasi: Rx = (R2 * R3) / R1
-        const rx = (r2 * r3) / r1;
+    // Issiqlik miqdorini hisoblash
+    function calculateHeat() {
+        const I = parseFloat(currentInput.value);
+        const R = parseFloat(resistanceInput.value);
+        const t = parseFloat(timeInput.value);
+        const m = parseFloat(massInput.value);
         
-        // Natijani ko'rsatish
-        rxResult.textContent = `${rx.toFixed(2)} Ω`;
+        // Joule-Lenz qonuni: Q = I² × R × t
+        const Q = I * I * R * t;
         
-        // Hisoblash formulasi matnini yangilash
-        calculationText.textContent = `Rₓ = (R₂ × R₃) / R₁ = (${r2}Ω × ${r3}Ω) / ${r1}Ω = ${rx.toFixed(2)}Ω`;
+        // Harorat o'zgarishi: ΔT = Q / (m × c)
+        const deltaT = Q / (m * specificHeatWater);
         
-        // Galvanometr ignasini muvozanat holatiga o'girish
-        updateGalvanometer(rx);
+        // Natijalarni yangilash
+        heatCalculated.textContent = `${Q.toFixed(0)} J`;
+        tempChange.textContent = `${deltaT.toFixed(2)} °C`;
+        heatEquivalent.textContent = "1.00 J/J";
         
-        return rx;
+        // Formulalarni yangilash
+        formulaCalc.textContent = `Q = I² × R × t = (${I.toFixed(1)})² × ${R} × ${t} = ${Q.toFixed(0)} J`;
+        formulaTemp.textContent = `ΔT = Q / (m × c) = ${Q.toFixed(0)} / (${m.toFixed(2)} × 4186) = ${deltaT.toFixed(2)}°C`;
+        
+        return { Q, deltaT };
     }
     
-    // Galvanometr ignasini yangilash
-    function updateGalvanometer(rx) {
-        // Haqiqiy qiymat
-        const actualRx = (r2 * r3) / r1;
+    // Tajribani boshlash
+    function startExperiment() {
+        if (experimentRunning) return;
         
-        // Farqni hisoblash
-        const difference = Math.abs(rx - actualRx);
+        experimentRunning = true;
+        startExperimentBtn.disabled = true;
+        startExperimentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tajriba Davom Etmoqda';
         
-        // Maksimal farqni aniqlash (1000Ω ga asoslangan)
-        const maxDifference = 1000;
+        const I = parseFloat(currentInput.value);
+        const R = parseFloat(resistanceInput.value);
+        const t = parseFloat(timeInput.value);
+        const m = parseFloat(massInput.value);
         
-        // Igna burchagini hisoblash (0 dan 60 gradusgacha)
-        // Farq kichik bo'lsa, igna vertikal holatda bo'ladi (0 gradus)
-        // Farq katta bo'lsa, igna 60 gradusgacha og'adi
-        let angle = Math.min(60, (difference / maxDifference) * 60);
+        const { Q, deltaT } = calculateHeat();
+        const finalTemp = initialTemp + deltaT;
         
-        // Tasodifiy tebranish effekti
-        angle += (Math.random() - 0.5) * 10;
+        // Haroratni asta-sekin oshirish
+        let elapsedTime = 0;
+        const totalTime = t * 1000; // millisekundga o'tkazish
+        const startTemp = currentTemperature;
         
-        // Igna holatini o'zgartirish
-        needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-        
-        // Igna rangi
-        if (difference < 10) {
-            needle.style.backgroundColor = '#06D6A0'; // Yashil - muvozanat
-        } else if (difference < 50) {
-            needle.style.backgroundColor = '#FFD166'; // Sariq - deyarli muvozanat
-        } else {
-            needle.style.backgroundColor = '#FF6B6B'; // Qizil - muvozanat yo'q
-        }
+        experimentInterval = setInterval(() => {
+            elapsedTime += 100;
+            
+            if (elapsedTime >= totalTime) {
+                clearInterval(experimentInterval);
+                experimentRunning = false;
+                startExperimentBtn.disabled = false;
+                startExperimentBtn.innerHTML = '<i class="fas fa-play"></i> Tajribani Boshlash';
+                currentTemperature = finalTemp;
+                currentTemp.textContent = `${currentTemperature.toFixed(1)}°C`;
+                return;
+            }
+            
+            // Progressni hisoblash
+            const progress = elapsedTime / totalTime;
+            
+            // Haroratni progressga qarab oshirish
+            currentTemperature = startTemp + (deltaT * progress);
+            currentTemp.textContent = `${currentTemperature.toFixed(1)}°C`;
+            
+            // Suv darajasida kichik o'zgarishlar (issiqlik kengayishi)
+            const expansion = 1 + (progress * 0.05); // 5% gacha kengayish
+            const mass = parseFloat(massInput.value);
+            const waterHeight = (30 + (mass * 35)) * expansion;
+            waterLevel.style.height = `${Math.min(waterHeight, 95)}%`;
+            
+            // Isitgichni effekti
+            const heater = document.querySelector('.heater-coil');
+            const intensity = 0.5 + (progress * 0.5);
+            heater.style.boxShadow = `0 0 ${10 * intensity}px rgba(255, 107, 107, ${intensity})`;
+            
+        }, 100);
     }
     
-    // Avtomatik muvozanatlashtirish
-    function autoBalance() {
-        // Tasodifiy muvozanat qiymatini yaratish
-        const balancedRx = Math.floor(Math.random() * 500) + 100;
+    // Tajribani qayta boshlash
+    function resetExperiment() {
+        clearInterval(experimentInterval);
+        experimentRunning = false;
+        currentTemperature = initialTemp;
+        currentTemp.textContent = `${currentTemperature.toFixed(1)}°C`;
         
-        // R2 ni tasodifiy tanlash
-        const randomR2 = Math.floor(Math.random() * 500) + 100;
+        startExperimentBtn.disabled = false;
+        startExperimentBtn.innerHTML = '<i class="fas fa-play"></i> Tajribani Boshlash';
         
-        // R3 ni tasodifiy tanlash
-        const randomR3 = Math.floor(Math.random() * 500) + 100;
+        // Suv darajasini qayta tiklash
+        const mass = parseFloat(massInput.value);
+        const waterHeight = 30 + (mass * 35);
+        waterLevel.style.height = `${waterHeight}%`;
         
-        // R1 ni hisoblash: R1 = (R2 * R3) / Rx
-        const calculatedR1 = (randomR2 * randomR3) / balancedRx;
+        // Isitgich effektini olib tashlash
+        const heater = document.querySelector('.heater-coil');
+        heater.style.boxShadow = '0 0 10px rgba(255, 107, 107, 0.5)';
+        
+        // Dastlabki hisoblash
+        calculateHeat();
+    }
+    
+    // Avtomatik hisoblash
+    function autoCalculate() {
+        // Tasodifiy qiymatlar yaratish
+        const randomCurrent = (Math.random() * 9 + 1).toFixed(1); // 1.0 - 10.0 A
+        const randomResistance = Math.floor(Math.random() * 90 + 10); // 10 - 100 Ω
+        const randomTime = Math.floor(Math.random() * 500 + 100); // 100 - 600 s
+        const randomMass = (Math.random() * 1.8 + 0.2).toFixed(1); // 0.2 - 2.0 kg
         
         // Qiymatlarni o'rnatish
-        r1Slider.value = Math.round(calculatedR1);
-        r2Slider.value = randomR2;
-        r3Slider.value = randomR3;
+        currentInput.value = randomCurrent;
+        resistanceInput.value = randomResistance;
+        timeInput.value = randomTime;
+        massInput.value = randomMass;
         
         // Yangilash
-        updateResistorValues();
-        calculateResistance();
+        syncInputs();
         
-        // Xabarni ko'rsatish
-        calculationText.textContent = `Avtomatik muvozanatlashtirildi! Rₓ = ${balancedRx.toFixed(2)}Ω`;
+        // Animatsiya effekti
+        heatCalculated.style.animation = 'none';
+        tempChange.style.animation = 'none';
         
-        // Animatsiya
-        rxResult.style.animation = 'none';
         setTimeout(() => {
-            rxResult.style.animation = 'pulse 1s';
+            heatCalculated.style.animation = 'pulse 1s';
+            tempChange.style.animation = 'pulse 1s 0.2s';
         }, 10);
     }
     
-    // Barcha qiymatlarni qayta o'rnatish
-    function resetValues() {
-        r1Slider.value = 100;
-        r2Slider.value = 200;
-        r3Slider.value = 300;
-        
-        updateResistorValues();
-        calculateResistance();
-        
-        // Xabarni ko'rsatish
-        calculationText.textContent = `Barcha qiymatlar qayta o'rnatildi. Rₓ = (R₂ × R₃) / R₁ = (200Ω × 300Ω) / 100Ω = 600Ω`;
-    }
-    
     // Hodisalarni biriktirish
-    r1Slider.addEventListener('input', function() {
-        updateResistorValues();
-        calculateResistance();
+    
+    // Tok kuchi uchun
+    currentSlider.addEventListener('input', function() {
+        currentInput.value = this.value;
+        syncInputs();
     });
     
-    r2Slider.addEventListener('input', function() {
-        updateResistorValues();
-        calculateResistance();
+    currentInput.addEventListener('input', function() {
+        syncInputs();
     });
     
-    r3Slider.addEventListener('input', function() {
-        updateResistorValues();
-        calculateResistance();
+    // Qarshilik uchun
+    resistanceSlider.addEventListener('input', function() {
+        resistanceInput.value = this.value;
+        syncInputs();
     });
     
-    calculateBtn.addEventListener('click', calculateResistance);
-    resetBtn.addEventListener('click', resetValues);
-    autoBalanceBtn.addEventListener('click', autoBalance);
+    resistanceInput.addEventListener('input', function() {
+        syncInputs();
+    });
+    
+    // Vaqt uchun
+    timeSlider.addEventListener('input', function() {
+        timeInput.value = this.value;
+        syncInputs();
+    });
+    
+    timeInput.addEventListener('input', function() {
+        syncInputs();
+    });
+    
+    // Massa uchun
+    massSlider.addEventListener('input', function() {
+        massInput.value = this.value;
+        syncInputs();
+    });
+    
+    massInput.addEventListener('input', function() {
+        syncInputs();
+    });
+    
+    // Tugmalar uchun
+    startExperimentBtn.addEventListener('click', startExperiment);
+    resetExperimentBtn.addEventListener('click', resetExperiment);
+    autoCalcBtn.addEventListener('click', autoCalculate);
     
     // CSS animatsiyasini qo'shish
     const style = document.createElement('style');
@@ -156,13 +256,16 @@ document.addEventListener('DOMContentLoaded', function() {
             100% { transform: scale(1); }
         }
         
-        .result {
+        .result-value {
             transition: all 0.5s ease;
+        }
+        
+        .water-level {
+            transition: height 0.5s ease;
         }
     `;
     document.head.appendChild(style);
     
     // Dastlabki hisoblash
-    updateResistorValues();
-    calculateResistance();
+    syncInputs();
 });
